@@ -93,7 +93,7 @@ docker ps -a
 docker stop [container_id]
 ```
 
-3. Оптимизация создания образа
+### 3. Оптимизация создания образа
 
 Было:
 
@@ -117,3 +117,34 @@ COPY . .
 Если package.json не изменился, то пакеты не будут устанавливаться заново.
 
 Это видно, если запустить `docker build .`. В первый раз команда выполняется, во второй - уже нет, так как файл package.json не изменялся.
+
+## Публикация пакета
+
+Залогиниться в docker hub:
+
+```
+docker login
+```
+
+Имя пакета должно начинаться с имени аккаунта. Нужно переименовать:
+
+```
+docker tag [old_name] [new_name]
+docker tag [image_id] meeeowth/docker
+```
+
+Опубликовать пакет:
+
+```
+docker push [account_name/repo_name:repo_tag]
+docker push meeeowth/docker
+```
+
+Пакет появился в профиле на docker hub: https://hub.docker.com/u/meeeowth
+
+Теперь его можно скачать на другой машине и запустить проект, ничего не устанавливая.
+
+```
+docker pull meeeowth/docker
+docker run -d -p 80:3000 meeeowth/docker
+```
