@@ -92,3 +92,28 @@ docker ps -a
 ```
 docker stop [container_id]
 ```
+
+3. Оптимизация создания образа
+
+Было:
+
+```
+COPY . .
+RUN npm install
+```
+
+Сначала копировали все файлы, потом выполняли `npm install`.
+
+Стало:
+
+```
+COPY package.json /app
+RUN npm install 
+COPY . .
+```
+
+Сначала копируем package.json.
+
+Если package.json не изменился, то пакеты не будут устанавливаться заново.
+
+Это видно, если запустить `docker build .`. В первый раз команда выполняется, во второй - уже нет, так как файл package.json не изменялся.
